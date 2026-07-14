@@ -1,0 +1,311 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Hind Siliguri', 'Inter', sans-serif;
+  
+  --color-primary: var(--primary-color, #3a86ff);
+  --color-secondary-grad: var(--secondary-grad-color, #8338ec);
+  --color-accent: var(--accent-color, #06d6a0);
+  --color-dark-bg: var(--dark-bg-color, #0b0f19);
+  --color-card-bg: var(--card-bg-color, rgba(17, 24, 39, 0.7));
+
+  --animate-float-slow: float-slow 8s ease-in-out infinite;
+  --animate-float-delayed: float-delayed 10s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+@keyframes float-delayed {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(20px) rotate(-5deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1f2937;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3b82f6;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-nav {
+  background: rgba(11, 15, 25, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Text glow */
+.text-glow {
+  text-shadow: 0 0 10px rgba(58, 134, 255, 0.3);
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+  font-family: 'Hind Siliguri', 'Inter', sans-serif;
+}
+
+/* Dynamic Theme Overrides for hardcoded background classes */
+html, body, #app-container, main {
+  background-color: var(--dark-bg-color, #0b0f19) !important;
+}
+
+/* Map specific dark section classes to the theme background */
+.bg-\[\#0b0f19\],
+.bg-\[\#0a0e1a\],
+.bg-\[\#080b13\],
+.bg-\[\#0a0d18\],
+.bg-\[\#080b14\],
+.bg-\[\#090c14\],
+.bg-\[\#0c101d\],
+.bg-\[\#02050c\],
+.bg-\[\#010307\],
+.bg-\[\#080b14\]\/95,
+.bg-\[\#0a0f1d\] {
+  background-color: var(--dark-bg-color, #0b0f19) !important;
+}
+
+/* Map card-like classes and nested background containers to the theme card background */
+.bg-white\/\[0\.02\],
+.bg-white\/\[0\.03\],
+.bg-white\/\[0\.01\],
+.bg-\[\#111625\],
+.bg-\[\#111625\]\/90,
+.bg-\[\#0a0f1d\]\/90 {
+  background-color: var(--card-bg-color, rgba(17, 24, 39, 0.75)) !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* ==========================================================================
+   PREMIUM LIGHT / WHITE VERSION CONTRAST OVERRIDES
+   ========================================================================== */
+
+.theme-light {
+  color-scheme: light;
+}
+
+/* Text color contrast overrides */
+.theme-light,
+.theme-light body,
+.theme-light #app-container,
+.theme-light main {
+  color: #1e293b !important;
+}
+
+.theme-light .text-white,
+.theme-light .text-gray-100 {
+  color: #0f172a !important; /* Deep dark slate */
+}
+
+.theme-light .text-gray-200 {
+  color: #1e293b !important; /* Medium slate */
+}
+
+.theme-light .text-gray-300 {
+  color: #334155 !important; /* Gray slate */
+}
+
+.theme-light .text-gray-400 {
+  color: #475569 !important; /* Muted slate */
+}
+
+.theme-light .text-gray-500 {
+  color: #64748b !important; /* Lighter slate for secondary label */
+}
+
+.theme-light .text-zinc-400 {
+  color: #475569 !important;
+}
+
+/* Override transparent gradient text clips to make them highly readable in light theme */
+.theme-light .text-transparent.bg-clip-text {
+  background: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+  color: var(--primary-color, #2563eb) !important;
+  -webkit-text-fill-color: var(--primary-color, #2563eb) !important;
+}
+
+/* Ensure white from/to gradient text elements default back to primary or slate-900 */
+.theme-light .from-white {
+  color: #0f172a !important;
+}
+
+/* Premium card and panels in light mode */
+.theme-light .glass-panel {
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05) !important;
+}
+
+.theme-light .glass-nav {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Borders in light mode */
+.theme-light .border-white\/5,
+.theme-light .border-white\/10,
+.theme-light .border-gray-800,
+.theme-light .border-gray-700,
+.theme-light .border-white\/20 {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Form inputs & interactive controls */
+.theme-light input,
+.theme-light textarea,
+.theme-light select {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+.theme-light input:focus,
+.theme-light textarea:focus,
+.theme-light select:focus {
+  border-color: var(--primary-color, #2563eb) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1) !important;
+}
+
+.theme-light input::placeholder,
+.theme-light textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Theme selector / drop-down menu in light theme */
+.theme-light #theme-dropdown-btn {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+  color: #1e293b !important;
+}
+
+.theme-light #theme-dropdown-btn:hover {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+.theme-light .absolute.right-0.rounded-2xl {
+  background-color: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Adjust lists and card backgrounds of general layouts */
+.theme-light .bg-white\/\[0\.02\],
+.theme-light .bg-white\/\[0\.03\],
+.theme-light .bg-white\/\[0\.01\] {
+  background-color: rgba(0, 0, 0, 0.02) !important;
+  border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.theme-light .bg-white\/\[0\.02\]:hover,
+.theme-light .bg-white\/\[0\.03\]:hover {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Adjust active button links */
+.theme-light .text-primary\/80 {
+  color: var(--primary-color, #2563eb) !important;
+  opacity: 0.85;
+}
+
+/* Mobile responsive menu */
+.theme-light #mobile-nav-panel {
+  background-color: rgba(255, 255, 255, 0.98) !important;
+  border-bottom-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Scrollbars in light mode */
+.theme-light ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.theme-light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+
+.theme-light ::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color, #2563eb);
+}
+
+/* Specific text exceptions */
+.theme-light .text-gray-400.font-light.text-gray-800 {
+  color: #334155 !important;
+}
+
+.theme-light .bg-accent {
+  background-color: var(--accent-color, #0ea5e9) !important;
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   GOOGLE TRANSLATE CUSTOM INTEGRATION
+   ========================================================================== */
+
+/* Hide Google Translate top toolbar banner */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-gadget-icon,
+.goog-logo-link,
+.VIpgJd-Zvi9od-ORHb-OEVmcd,
+#goog-gt-tt,
+.skiptranslate > iframe,
+iframe.skiptranslate {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Reset body top padding pushed by Google Translate */
+body {
+    top: 0px !important;
+    position: static !important;
+}
+
+/* Hide the Google Translate tooltip on hover */
+.goog-te-balloon-frame {
+    display: none !important;
+}
+
+/* Remove hover highlight background injected by Google Translate */
+.goog-text-highlight {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+
