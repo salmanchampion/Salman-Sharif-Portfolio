@@ -422,6 +422,45 @@ const defaultPortfolioData: PortfolioData = {
     }
   ],
 
+  achievements: [
+    {
+      id: "achv-1",
+      title: "Achievement 1",
+      description: "প্রফেশনাল স্কিল ডেভেলপমেন্টের জন্য বিশেষ সম্মাননা এবং স্বীকৃতিমূলক সার্টিফিকেট।",
+      image: "https://i.postimg.cc/L4v5NYff/Whats-App-Image-2026-07-01-at-5-46-18-PM.jpg"
+    },
+    {
+      id: "achv-2",
+      title: "Artificial Intelligence Beginner's Guide",
+      description: "কৃত্রিম বুদ্ধিমত্তা এবং ভবিষ্যৎ প্রযুক্তি সম্পর্কে মৌলিক ধারণা ও বাস্তব প্রয়োগের সফল প্রশিক্ষণ।",
+      image: "https://i.postimg.cc/SNvsbBgX/Artificial-Intelligence-Beginners-Guide.png"
+    },
+    {
+      id: "achv-3",
+      title: "Certificate 3",
+      description: "কোর্সটি সফলভাবে সম্পন্ন করার জন্য সম্মানসূচক প্রফেশনাল সার্টিফিকেট প্রদান।",
+      image: "https://i.postimg.cc/jSnjxM17/certificate-xumnu9o4e3kk-1775937537.png"
+    },
+    {
+      id: "achv-4",
+      title: "Mohammad Salman Sharif Certificate",
+      description: "টেকনিক্যাল পারফরম্যান্স ও ডেডিকেশনের জন্য মোহাম্মদ সালমান শরীফকে প্রদত্ত বিশেষ স্বীকৃতি।",
+      image: "https://i.postimg.cc/bwSvym5R/Mohammad-Salman-Sharif-(1).png"
+    },
+    {
+      id: "achv-5",
+      title: "Cyber Hygiene Certificate 1",
+      description: "সাইবার নিরাপত্তা এবং ডিজিটাল হাইজিন সম্পর্কে সচেতনতা বৃদ্ধিমূলক কোর্সের স্বীকৃতি।",
+      image: "https://i.postimg.cc/d0MVL8Mf/salman-shorif-cyber-hygiene-32073-(1).png"
+    },
+    {
+      id: "achv-6",
+      title: "Cyber Hygiene Certificate 2",
+      description: "উন্নত সাইবার নিরাপত্তা প্রটোকল এবং ডাটা সুরক্ষায় সফলভাবে প্রশিক্ষণ সম্পন্ন করার সার্টিফিকেট।",
+      image: "https://i.postimg.cc/3wMxdgMb/salman-shorif-cyber-hygiene-32073-(2).png"
+    }
+  ],
+
   socialLinks: {
     facebook: "https://www.facebook.com/mohammadsalmansharif37",
     linkedin: "https://www.linkedin.com/in/salmansharif",

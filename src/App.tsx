@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
+import { BackgroundAnimation } from "./components/BackgroundAnimation";
 import Hero from "./components/Hero";
 import About from "./components/About";
 import Skills from "./components/Skills";
@@ -20,6 +21,7 @@ import SecurityKeypad from "./components/SecurityKeypad";
 import BudgetCalculator from "./components/BudgetCalculator";
 import FloatingWhatsApp from "./components/FloatingWhatsApp";
 import TravelBlog from "./components/TravelBlog";
+import { Achievements } from "./components/Achievements";
 import { portfolioData } from "./data";
 import { Compass, ShieldCheck, Plane, Award, Sparkles, Flame, CheckCircle, ArrowRight } from "lucide-react";
 import { getActiveThemeId, applyTheme } from "./themes";
@@ -30,11 +32,31 @@ export default function App() {
   const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
   const [isKeypadOpen, setIsKeypadOpen] = useState<boolean>(false);
   const [currentTheme, setCurrentTheme] = useState<string>(() => getActiveThemeId());
+  const [isLoading, setIsLoading] = useState(true);
 
   // Apply theme dynamically on theme change
   useEffect(() => {
     applyTheme(currentTheme);
   }, [currentTheme]);
+
+  // Fetch portfolio data from database
+  useEffect(() => {
+    fetch("/api/portfolio-data")
+      .then(r => r.json())
+      .then(res => {
+        if (res.data) {
+           // We'll update the object reference dynamically
+           Object.keys(res.data).forEach((key) => {
+             (portfolioData as any)[key] = (res.data as any)[key];
+           });
+        }
+        setIsLoading(false);
+      })
+      .catch(e => {
+        console.error("Failed to fetch data:", e);
+        setIsLoading(false);
+      });
+  }, []);
 
   // Monitor keyboard key sequences sequentially to unlock when *045# is entered
   useEffect(() => {
@@ -273,6 +295,7 @@ export default function App() {
         return (
           <div className="space-y-0 animate-fadeIn pt-16">
             <Experience />
+            <Achievements />
           </div>
         );
       case "portfolio":
@@ -298,8 +321,18 @@ export default function App() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#070b13] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen text-gray-100 flex flex-col justify-between" id="app-container">
+    <div className="min-h-screen text-gray-100 flex flex-col justify-between relative" id="app-container">
+      <BackgroundAnimation />
+      
       {/* Dynamic Header */}
       <Header 
         currentPage={currentPage} 

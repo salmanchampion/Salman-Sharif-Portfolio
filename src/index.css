@@ -80,7 +80,7 @@ html, body, #app-container, main {
   background-color: var(--dark-bg-color, #0b0f19) !important;
 }
 
-/* Map specific dark section classes to the theme background */
+/* Map specific dark section classes to the theme background but slightly transparent */
 .bg-\[\#0b0f19\],
 .bg-\[\#0a0e1a\],
 .bg-\[\#080b13\],
@@ -92,7 +92,7 @@ html, body, #app-container, main {
 .bg-\[\#010307\],
 .bg-\[\#080b14\]\/95,
 .bg-\[\#0a0f1d\] {
-  background-color: var(--dark-bg-color, #0b0f19) !important;
+  background-color: transparent !important;
 }
 
 /* Map card-like classes and nested background containers to the theme card background */

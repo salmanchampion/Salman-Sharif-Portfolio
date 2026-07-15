@@ -80,6 +80,13 @@ export interface BlogPost {
   content: string;
 }
 
+export interface Achievement {
+  id: string;
+  title: string;
+  image: string;
+  description?: string;
+}
+
 export interface PortfolioData {
   name: string;
   englishName: string;
@@ -100,6 +107,7 @@ export interface PortfolioData {
   testimonials: Testimonial[];
   statistics: Statistic[];
   blogs: BlogPost[];
+  achievements: Achievement[];
   socialLinks: {
     facebook: string;
     linkedin: string;

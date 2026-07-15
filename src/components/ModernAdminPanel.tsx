@@ -15,7 +15,7 @@ interface AdminPanelProps {
   onClose: () => void;
 }
 
-type TabType = "overview" | "profile" | "services" | "projects" | "experiences" | "testimonials" | "blogs" | "integration";
+type TabType = "overview" | "profile" | "services" | "projects" | "experiences" | "achievements" | "testimonials" | "blogs" | "integration";
 
 export default function ModernAdminPanel({ isOpen, onClose }: AdminPanelProps) {
   const [activeTab, setActiveTab] = useState<TabType>("overview");
@@ -315,31 +315,43 @@ export default function ModernAdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
   // --- Blogs Management ---
   const handleBlogChange = (idx: number, key: keyof BlogPost, val: any) => {
-    const updated = [...editedData.blogs];
-    updated[idx] = { ...updated[idx], [key]: val };
-    setEditedData(prev => ({ ...prev, blogs: updated }));
+    setEditedData(prev => {
+      const updated = [...(prev.blogs || [])];
+      if (updated[idx]) {
+        updated[idx] = { ...updated[idx], [key]: val };
+      }
+      return { ...prev, blogs: updated };
+    });
   };
 
   const handleBlogTagsChange = (idx: number, val: string) => {
-    const updated = [...editedData.blogs];
-    updated[idx] = { ...updated[idx], tags: val.split(",").map(t => t.trim()).filter(t => t !== "") };
-    setEditedData(prev => ({ ...prev, blogs: updated }));
+    setEditedData(prev => {
+      const updated = [...(prev.blogs || [])];
+      if (updated[idx]) {
+        updated[idx] = { ...updated[idx], tags: val.split(",").map(t => t.trim()).filter(t => t !== "") };
+      }
+      return { ...prev, blogs: updated };
+    });
   };
 
   const handleBlogCategoryChange = (idx: number, catId: string) => {
-    const updated = [...editedData.blogs];
-    let label = "অন্যান্য";
-    if (catId === "visa") label = "ভিসা প্রসেসিং";
-    else if (catId === "tickets") label = "ফ্লাইট টিকিট হ্যাকস";
-    else if (catId === "tips") label = "ভ্রমণ গাইড ও টিপস";
-    else if (catId === "hajj") label = "হজ্জ ও ওমরাহ";
-    
-    updated[idx] = { 
-      ...updated[idx], 
-      category: catId,
-      categoryLabel: label
-    };
-    setEditedData(prev => ({ ...prev, blogs: updated }));
+    setEditedData(prev => {
+      const updated = [...(prev.blogs || [])];
+      if (!updated[idx]) return prev;
+      
+      let label = "অন্যান্য";
+      if (catId === "visa") label = "ভিসা প্রসেসিং";
+      else if (catId === "tickets") label = "ফ্লাইট টিকিট হ্যাকস";
+      else if (catId === "tips") label = "ভ্রমণ গাইড ও টিপস";
+      else if (catId === "hajj") label = "হজ্জ ও ওমরাহ";
+      
+      updated[idx] = { 
+        ...updated[idx], 
+        category: catId,
+        categoryLabel: label
+      };
+      return { ...prev, blogs: updated };
+    });
   };
 
   const addBlog = () => {
@@ -356,13 +368,12 @@ export default function ModernAdminPanel({ isOpen, onClose }: AdminPanelProps) {
       imagePrompt: "travel_lifestyle_passport",
       content: "আপনার ব্লগের সম্পূর্ণ মূল কনটেন্টটি এখানে টাইপ করুন..."
     };
-    setEditedData(prev => ({ ...prev, blogs: [...(editedData.blogs || []), newBlog] }));
+    setEditedData(prev => ({ ...prev, blogs: [...(prev.blogs || []), newBlog] }));
   };
 
   const removeBlog = (idx: number) => {
     if (confirm("আপনি কি নিশ্চিতভাবে এই ব্লগটি ডিলিট করতে চান?")) {
-      const updated = (editedData.blogs || []).filter((_, i) => i !== idx);
-      setEditedData(prev => ({ ...prev, blogs: updated }));
+      setEditedData(prev => ({ ...prev, blogs: (prev.blogs || []).filter((_, i) => i !== idx) }));
     }
   };
 
@@ -373,37 +384,51 @@ export default function ModernAdminPanel({ isOpen, onClose }: AdminPanelProps) {
       return;
     }
 
-    updatePortfolioData(editedData);
-    setSaveSuccess(true);
-    
-    // Premium dual-tone chord audio feedback on success
-    try {
-      const context = new (window.AudioContext || (window as any).webkitAudioContext)();
-      
-      const playTone = (freq: number, delay: number, dur: number) => {
-        const osc = context.createOscillator();
-        const gain = context.createGain();
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(freq, context.currentTime + delay);
-        gain.gain.setValueAtTime(0.08, context.currentTime + delay);
-        gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + delay + dur);
-        osc.connect(gain);
-        gain.connect(context.destination);
-        osc.start(context.currentTime + delay);
-        osc.stop(context.currentTime + delay + dur);
-      };
+    // Save to API
+    fetch("/api/portfolio-data", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data: editedData })
+    }).then(res => res.json()).then(result => {
+      if (result.success) {
+        updatePortfolioData(editedData);
+        setSaveSuccess(true);
+        
+        // Premium dual-tone chord audio feedback on success
+        try {
+          const context = new (window.AudioContext || (window as any).webkitAudioContext)();
+          
+          const playTone = (freq: number, delay: number, dur: number) => {
+            const osc = context.createOscillator();
+            const gain = context.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, context.currentTime + delay);
+            gain.gain.setValueAtTime(0.08, context.currentTime + delay);
+            gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + delay + dur);
+            osc.connect(gain);
+            gain.connect(context.destination);
+            osc.start(context.currentTime + delay);
+            osc.stop(context.currentTime + delay + dur);
+          };
 
-      playTone(523.25, 0, 0.25); // C5
-      playTone(659.25, 0.1, 0.25); // E5
-      playTone(783.99, 0.2, 0.4); // G5
-      playTone(1046.50, 0.3, 0.5); // C6
-    } catch (e) {}
+          playTone(523.25, 0, 0.25); // C5
+          playTone(659.25, 0.1, 0.25); // E5
+          playTone(783.99, 0.2, 0.4); // G5
+          playTone(1046.50, 0.3, 0.5); // C6
+        } catch (e) {}
 
-    setTimeout(() => {
-      setSaveSuccess(false);
-      onClose();
-      window.location.reload();
-    }, 1200);
+        setTimeout(() => {
+          setSaveSuccess(false);
+          onClose();
+          window.location.reload();
+        }, 1200);
+      } else {
+        alert("Server error");
+      }
+    }).catch(e => {
+      console.error(e);
+      alert("Network error");
+    });
   };
 
   // --- Reset to Default Site Configurations ---
@@ -580,7 +605,18 @@ export default function ModernAdminPanel({ isOpen, onClose }: AdminPanelProps) {
               title="অভিজ্ঞতা ও অর্জন"
             >
               <Award className="w-4 h-4 shrink-0 text-cyan-400" />
-              <span className="hidden sm:inline">৬. অভিজ্ঞতা ও অর্জন</span>
+              <span className="hidden sm:inline">৬. অভিজ্ঞতা</span>
+            </button>
+
+            <button
+              onClick={() => { setActiveTab("achievements"); setExpandedIndex(0); }}
+              className={`px-3 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 text-left flex items-center justify-center sm:justify-start gap-3 cursor-pointer ${
+                activeTab === "achievements" ? "bg-gradient-to-r from-cyan-600 to-primary text-white font-extrabold shadow-lg shadow-cyan-500/10 border-l-4 border-cyan-400" : "text-gray-400 hover:text-white hover:bg-white/5"
+              }`}
+              title="অ্যাচিভমেন্ট ও সার্টিফিকেট"
+            >
+              <CheckCircle className="w-4 h-4 shrink-0 text-cyan-400" />
+              <span className="hidden sm:inline">৭. সার্টিফিকেট</span>
             </button>
 
             <button
@@ -591,7 +627,7 @@ export default function ModernAdminPanel({ isOpen, onClose }: AdminPanelProps) {
               title="রিভিউ ও স্ট্যাটস"
             >
               <MessageSquare className="w-4 h-4 shrink-0 text-cyan-400" />
-              <span className="hidden sm:inline">৭. রিভিউ ও স্ট্যাটস</span>
+              <span className="hidden sm:inline">৮. রিভিউ ও স্ট্যাটস</span>
             </button>
 
             {/* Group 5: অ্যাডভান্সড সেটিংস */}
@@ -1471,6 +1507,130 @@ export default function ModernAdminPanel({ isOpen, onClose }: AdminPanelProps) {
                   </div>
                 </div>
 
+              </div>
+            )}
+
+            {/* ACHIEVEMENTS TAB */}
+            {activeTab === "achievements" && (
+              <div className="space-y-6 animate-fadeIn">
+                <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                  <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                    <Award className="w-5 h-5 text-cyan-400" /> সার্টিফিকেট এবং অ্যাচিভমেন্ট
+                  </h3>
+                  <button
+                    onClick={() => {
+                      setEditedData(prev => ({
+                        ...prev,
+                        achievements: [
+                          ...prev.achievements,
+                          {
+                            id: `achv-${Date.now()}`,
+                            title: "নতুন সার্টিফিকেট",
+                            image: ""
+                          }
+                        ]
+                      }));
+                      setExpandedIndex(editedData.achievements?.length || 0);
+                    }}
+                    className="px-3 py-1.5 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 rounded-lg text-sm transition-colors border border-cyan-500/20 flex items-center gap-2"
+                  >
+                    + যুক্ত করুন
+                  </button>
+                </div>
+                
+                <div className="space-y-4">
+                  {editedData.achievements?.map((achv, idx) => (
+                    <div key={achv.id} className="bg-[#0f1525] border border-white/5 rounded-xl overflow-hidden">
+                      <div
+                        className="p-4 flex items-center justify-between cursor-pointer hover:bg-white/5 transition-colors"
+                        onClick={() => setExpandedIndex(expandedIndex === idx ? null : idx)}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0 font-bold border border-cyan-500/20">
+                            {idx + 1}
+                          </div>
+                          <div>
+                            <div className="font-semibold text-gray-200">{achv.title || "নামহীন সার্টিফিকেট"}</div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if(window.confirm("আপনি কি নিশ্চিত এটি মুছে ফেলতে চান?")) {
+                                setEditedData(prev => ({
+                                  ...prev,
+                                  achievements: prev.achievements.filter(a => a.id !== achv.id)
+                                }));
+                              }
+                            }}
+                            className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                            title="মুছে ফেলুন"
+                          >
+                            <span className="text-xl leading-none">&times;</span>
+                          </button>
+                          <ChevronRight className={`w-5 h-5 text-gray-500 transition-transform ${expandedIndex === idx ? 'rotate-90' : ''}`} />
+                        </div>
+                      </div>
+
+                      {expandedIndex === idx && (
+                        <div className="p-4 border-t border-white/5 bg-[#0a0e1a] space-y-4">
+                          <div className="grid grid-cols-1 gap-4">
+                            <div>
+                              <label className="block text-xs font-medium text-gray-400 mb-1">সার্টিফিকেটের নাম</label>
+                              <input
+                                type="text"
+                                value={achv.title}
+                                onChange={(e) => {
+                                  const newAchvs = [...editedData.achievements];
+                                  newAchvs[idx].title = e.target.value;
+                                  setEditedData(prev => ({ ...prev, achievements: newAchvs }));
+                                }}
+                                className="w-full bg-[#131b2f] border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500/50"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-gray-400 mb-1">ইমেজ URL</label>
+                              <input
+                                type="text"
+                                value={achv.image}
+                                onChange={(e) => {
+                                  const newAchvs = [...editedData.achievements];
+                                  newAchvs[idx].image = e.target.value;
+                                  setEditedData(prev => ({ ...prev, achievements: newAchvs }));
+                                }}
+                                className="w-full bg-[#131b2f] border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500/50"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-gray-400 mb-1">বিবরণ</label>
+                              <textarea
+                                value={achv.description || ""}
+                                onChange={(e) => {
+                                  const newAchvs = [...editedData.achievements];
+                                  newAchvs[idx].description = e.target.value;
+                                  setEditedData(prev => ({ ...prev, achievements: newAchvs }));
+                                }}
+                                className="w-full bg-[#131b2f] border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500/50 min-h-[80px]"
+                                placeholder="সার্টিফিকেটের বিবরণ লিখুন..."
+                              />
+                            </div>
+                            {achv.image && (
+                                <div className="mt-2 h-32 w-48 rounded-lg overflow-hidden border border-white/10">
+                                    <img src={achv.image} alt={achv.title} className="w-full h-full object-cover" />
+                                </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  {(!editedData.achievements || editedData.achievements.length === 0) && (
+                    <div className="text-center py-10 text-gray-500 text-sm">
+                      কোনো সার্টিফিকেট যুক্ত করা নেই।
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 

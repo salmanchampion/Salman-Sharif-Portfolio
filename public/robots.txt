@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://salman-sharif-portfolio.ai.studio/sitemap.xml
